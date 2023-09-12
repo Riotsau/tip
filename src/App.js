@@ -1,12 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 export default function App() {
   return (
     <div>
       <TipCalculator />
+      <StudentEditor />
     </div>
   );
 }
+
+const Weather = () => {
+  const [weather, setWeather] = useState("");
+  useEffect(() => {
+    axios.get('http://api.weatherapi.com/v1/current.json?key=691ce340a5e74b0cb0040023231109&q=Sydney')
+      .then(function (response) {
+        // handle success
+        setWeather(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+      });
+  }, []);
+  return (
+    <div>
+      {weather && (
+        <>
+          location {weather.location.name} temperature {weather.current.temp_c}
+        </>
+      )}
+    </div>
+  )
+}
+
+const StudentEditor = () => {
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const handleOnClick = () => {
+    console.log('name', name);
+    console.log('age', age);
+  }
+  return (
+    <div>
+      <input type="text" onChange={(e) => setName(e.target.value)}></input>
+      <input type="text" onChange={(e) => setAge(e.target.value)}></input>
+      <button onClick={handleOnClick}>
+        Submit
+      </button>
+    </div>
+  )
+}
+
 function TipCalculator() {
   const [bill, setBill] = useState("");
   const [percentage1, setPercentage1] = useState(0);
